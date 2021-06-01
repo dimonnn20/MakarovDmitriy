@@ -1,23 +1,34 @@
 package com.senla;
 
 import com.senla.api.dao.IGuestDao;
+import com.senla.api.dao.IMaintenanceDao;
+import com.senla.api.dao.IOrderDao;
 import com.senla.api.dao.IRoomDao;
 import com.senla.api.service.IGuestService;
+import com.senla.api.service.IMaintenanceService;
+import com.senla.api.service.IOrderService;
 import com.senla.api.service.IRoomService;
 import com.senla.dao.GuestDao;
+import com.senla.dao.MaintenanceDao;
+import com.senla.dao.OrderDao;
 import com.senla.dao.RoomDao;
-import com.senla.model.Guest;
-import com.senla.model.Room;
-import com.senla.model.RoomStatus;
+import com.senla.model.*;
 import com.senla.service.GuestService;
+import com.senla.service.MaintenanceService;
+import com.senla.service.OrderService;
 import com.senla.service.RoomService;
 
 public class Hotel {
     private static final IGuestDao guestDao = new GuestDao();
     private static final IGuestService guestService = new GuestService(guestDao);
-
+    private static final IMaintenanceDao maintenanceDao = new MaintenanceDao();
+    private static final IMaintenanceService maintenanceService = new MaintenanceService(maintenanceDao);
     private static final IRoomDao roomDao = new RoomDao();
-    private static final IRoomService roomService = new RoomService(roomDao, guestDao);
+    private static final IRoomService roomService = new RoomService(roomDao);
+    private static final IOrderDao orderDao = new OrderDao();
+    private static final IOrderService orderService = new OrderService(roomDao, guestDao,maintenanceDao,orderDao);
+
+
 
     public static void main(String[] args) {
         Guest guest1 = guestService.addGuest("Vasia", 19);
@@ -36,21 +47,18 @@ public class Hotel {
         Room room3 = roomService.addRoom(1, 1, RoomStatus.OPEN,200L,null);
         Room room4 = roomService.addRoom(1, 8, RoomStatus.OPEN,800L,null);
 
-        roomService.checkIn(1L, 4L);
-        roomService.checkIn(2L, 4L);
-        roomService.checkIn(3L, 4L);
-        roomService.checkIn(4L, 4L);
-        roomService.checkIn(5L, 4L);
-        roomService.checkIn(6L, 4L);
-        roomService.checkIn(7L, 4L);
-        roomService.checkIn(1L, 4L);
-        roomService.checkIn(8L, 4L);
-        //roomService.checkIn(9L, 4L);
-        //roomService.checkIn(10L, 4L);
-       System.out.println(room1.getGuests());
-       roomService.evictGuest(1L);
-       System.out.println(room1.getGuests());
-        System.out.println(roomDao.getAll());
+        Maintenance maintenance1 = maintenanceService.addMaintenance("SPA", 100D);
+        Maintenance maintenance2 = maintenanceService.addMaintenance("Swimmingpool", 50D);
+        Maintenance maintenance3 = maintenanceService.addMaintenance("Gym", 500D);
+        Maintenance maintenance4 = maintenanceService.addMaintenance("Sauna", 600D);
+
+        Order order = orderService.addOrder(1L,
+                1L,
+                "06-01-2021",
+                "06-04-2021",
+                null);
+        orderService.addOrder(2L, 2L, "06-01-2021", "06-05-2021", null);
+        System.out.println(orderDao.getAll());
 
     }
 }

@@ -8,8 +8,7 @@ import java.util.List;
 
 public interface IRoomService {
 
-    public void checkIn (Long guestId, Long roomId);
-    public void evictGuest (Long guestId);
+
     public Room addRoom (Integer number, Integer capacity, RoomStatus status,Long price, List<Guest> guests);
 
 }

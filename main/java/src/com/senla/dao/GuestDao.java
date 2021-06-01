@@ -2,6 +2,7 @@ package com.senla.dao;
 
 import com.senla.api.dao.IGuestDao;
 import com.senla.model.Guest;
+import com.senla.util.IdGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,8 @@ public class GuestDao implements IGuestDao {
 private List <Guest> guests = new ArrayList<>();
     @Override
     public void save(Guest entity) {
-    guests.add(entity);
+        entity.setId(IdGenerator.generateGuestId());
+        guests.add(entity);
     }
 
     @Override
@@ -38,4 +40,6 @@ private List <Guest> guests = new ArrayList<>();
     public Guest update(Guest entity) {
         return null;
     }
+
+
 }

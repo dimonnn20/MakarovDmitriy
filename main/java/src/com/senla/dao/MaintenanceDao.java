@@ -2,6 +2,7 @@ package com.senla.dao;
 
 import com.senla.api.dao.IMaintenanceDao;
 import com.senla.model.Maintenance;
+import com.senla.util.IdGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,7 @@ public class MaintenanceDao implements IMaintenanceDao {
 
     @Override
     public void save(Maintenance entity) {
+        entity.setId(IdGenerator.generateMaintenanceId());
         maintenances.add(entity);
     }
 

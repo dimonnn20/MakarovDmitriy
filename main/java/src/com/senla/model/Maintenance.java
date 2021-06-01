@@ -16,6 +16,10 @@ public class Maintenance extends AEntity {
         this.price = price;
     }
 
+    public Maintenance (String name, Double price) {
+        this.name = name;
+        this.price = price;
+    }
     @Override
     public String toString() {
         return "Maintenance{" +
