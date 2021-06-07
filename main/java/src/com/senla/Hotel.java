@@ -18,16 +18,18 @@ import com.senla.service.MaintenanceService;
 import com.senla.service.OrderService;
 import com.senla.service.RoomService;
 
+import java.time.LocalDate;
+import java.util.List;
+
 public class Hotel {
     private static final IGuestDao guestDao = new GuestDao();
     private static final IGuestService guestService = new GuestService(guestDao);
     private static final IMaintenanceDao maintenanceDao = new MaintenanceDao();
     private static final IMaintenanceService maintenanceService = new MaintenanceService(maintenanceDao);
     private static final IRoomDao roomDao = new RoomDao();
-    private static final IRoomService roomService = new RoomService(roomDao);
     private static final IOrderDao orderDao = new OrderDao();
+    private static final IRoomService roomService = new RoomService(roomDao,orderDao);
     private static final IOrderService orderService = new OrderService(roomDao, guestDao,maintenanceDao,orderDao);
-
 
 
     public static void main(String[] args) {
@@ -42,23 +44,67 @@ public class Hotel {
         Guest guest9 = guestService.addGuest("Veronika", 30);
         Guest guest10 = guestService.addGuest("Anastasia", 30);
 
-        Room room1 = roomService.addRoom(1, 2, RoomStatus.OPEN,300L,null);
-        Room room2 = roomService.addRoom(1, 4, RoomStatus.OPEN,400L,null);
-        Room room3 = roomService.addRoom(1, 1, RoomStatus.OPEN,200L,null);
-        Room room4 = roomService.addRoom(1, 8, RoomStatus.OPEN,800L,null);
+        Room room1 = roomService.addRoom(1, 2, RoomStatus.AVAILABLE, 100D);
+        Room room2 = roomService.addRoom(2, 4, RoomStatus.AVAILABLE, 200D);
+        Room room3 = roomService.addRoom(3, 1, RoomStatus.AVAILABLE, 300D);
+        Room room4 = roomService.addRoom(4, 8, RoomStatus.AVAILABLE, 400D);
 
         Maintenance maintenance1 = maintenanceService.addMaintenance("SPA", 100D);
         Maintenance maintenance2 = maintenanceService.addMaintenance("Swimmingpool", 50D);
         Maintenance maintenance3 = maintenanceService.addMaintenance("Gym", 500D);
         Maintenance maintenance4 = maintenanceService.addMaintenance("Sauna", 600D);
 
-        Order order = orderService.addOrder(1L,
-                1L,
-                "06-01-2021",
-                "06-04-2021",
-                null);
-        orderService.addOrder(2L, 2L, "06-01-2021", "06-05-2021", null);
-        System.out.println(orderDao.getAll());
+        List<Room> allRooms= roomService.getAll();
+        allRooms.forEach (System.out :: println);
+        System.out.println("__________________________________________________________");
+        System.out.println("Свободные комнаты (отсортированные по номеру) перед заказами");
+        List <Room> freeRoomsOrderByNumber = roomService.getFreeRoomsOrderByNumber();
+        freeRoomsOrderByNumber.forEach(System.out::println);
+        System.out.println("__________________________________________________________");
+
+        System.out.println("Свободные комнаты (отсортированные по вместимости) перед заказами");
+        List <Room> freeRoomsByCapacity = roomService.getFreeRoomsOrderByCapacity();
+        freeRoomsByCapacity.forEach(System.out::println);
+        System.out.println("__________________________________________________________");
+
+        Order order1 = orderService.addOrder(1L, 1L, LocalDate.of(2021, 06, 01), LocalDate.of(2021, 06, 10), null);
+
+        System.out.println("Свободные комнаты (отсортированные по номеру) после 1 заказа");
+        freeRoomsOrderByNumber = roomService.getFreeRoomsOrderByNumber();
+        freeRoomsOrderByNumber.forEach(System.out::println);
+        System.out.println("__________________________________________________________");
+
+        System.out.println("Свободные комнаты (отсортированные по цене) после 1 заказа");
+        List <Room> freeRoomsByPrice = roomService.getFreeRoomsOrderByPrice();
+        freeRoomsByPrice.forEach(System.out::println);
+        System.out.println("__________________________________________________________");
+
+        Order order2 = orderService.addOrder(2L, 2L, LocalDate.of(2021, 06, 06), LocalDate.of(2021, 06, 14), null);
+
+        System.out.println("Свободные комнаты (отсортированные по номеру) после 2 заказа");
+        freeRoomsOrderByNumber = roomService.getFreeRoomsOrderByNumber();
+        freeRoomsOrderByNumber.forEach(System.out::println);
+        System.out.println("__________________________________________________________");
+
+        Order order3 = orderService.addOrder(1L, 3L, LocalDate.of(2021, 06, 10), LocalDate.of(2021, 06, 14), null);
+        System.out.println("Свободные комнаты (отсортированные по номеру) после 3 заказа");
+        freeRoomsOrderByNumber = roomService.getFreeRoomsOrderByNumber();
+        freeRoomsOrderByNumber.forEach(System.out::println);
+        System.out.println("__________________________________________________________");
+
+        System.out.println("Количество свободных номеров");
+        System.out.println(roomService.getNumberFreeRoomsOrder());
+        System.out.println("__________________________________________________________");
+
+        System.out.println("Свободные номера на дату в будущем");
+        List <Room> freeRoomsByDate = roomService.getFreeRoomsOrderByDate(LocalDate.of(2021, 07, 01));
+        freeRoomsByDate.forEach(System.out::println);
+        System.out.println("__________________________________________________________");
+
+        System.out.println("Услуги по цене");
+        List <Maintenance> maintenancesByPrice = maintenanceDao.getAll(null, "price");
+        maintenancesByPrice.forEach(System.out::println);
+        System.out.println("__________________________________________________________");
 
     }
 }
