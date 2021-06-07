@@ -35,9 +35,9 @@ public class Hotel {
     public static void main(String[] args) {
         Guest guest1 = guestService.addGuest("Vasia", 19);
         Guest guest2 = guestService.addGuest("Igor", 30);
-        Guest guest3 = guestService.addGuest("Sveta", 30);
-        Guest guest4 = guestService.addGuest("Anton", 30);
-        Guest guest5 = guestService.addGuest("Vladimir", 30);
+        Guest guest3 = guestService.addGuest("Sveta", 25);
+        Guest guest4 = guestService.addGuest("Anton", 36);
+        Guest guest5 = guestService.addGuest("Vladimir", 39);
         Guest guest6 = guestService.addGuest("Ksenia", 30);
         Guest guest7 = guestService.addGuest("Victoria", 30);
         Guest guest8 = guestService.addGuest("Sergey", 30);
@@ -67,7 +67,20 @@ public class Hotel {
         freeRoomsByCapacity.forEach(System.out::println);
         System.out.println("__________________________________________________________");
 
-        Order order1 = orderService.addOrder(1L, 1L, LocalDate.of(2021, 06, 01), LocalDate.of(2021, 06, 10), null);
+        Order order1 = orderService.addOrder(1L, 1L, LocalDate.of(2021, 05, 01),
+                LocalDate.of(2021, 05, 10), null);
+
+        Order order2 = orderService.addOrder(2L, 1L, LocalDate.of(2021, 05, 12),
+                LocalDate.of(2021, 05, 16), null);
+
+        Order order3 = orderService.addOrder(3L, 1L, LocalDate.of(2021, 05, 20),
+                LocalDate.of(2021, 05, 25), null);
+
+        Order order4 = orderService.addOrder(4L, 1L, LocalDate.of(2021, 06, 01),
+                LocalDate.of(2021, 06, 03), null);
+
+        Order order5 = orderService.addOrder(5L, 1L, LocalDate.of(2021, 06, 05),
+                LocalDate.of(2021, 06, 10), null);
 
         System.out.println("Свободные комнаты (отсортированные по номеру) после 1 заказа");
         freeRoomsOrderByNumber = roomService.getFreeRoomsOrderByNumber();
@@ -79,15 +92,15 @@ public class Hotel {
         freeRoomsByPrice.forEach(System.out::println);
         System.out.println("__________________________________________________________");
 
-        Order order2 = orderService.addOrder(2L, 2L, LocalDate.of(2021, 06, 06), LocalDate.of(2021, 06, 14), null);
+        Order order6 = orderService.addOrder(2L, 2L, LocalDate.of(2021, 06, 06), LocalDate.of(2021, 06, 14), null);
 
-        System.out.println("Свободные комнаты (отсортированные по номеру) после 2 заказа");
+        System.out.println("Свободные комнаты (отсортированные по номеру) после 6 заказа");
         freeRoomsOrderByNumber = roomService.getFreeRoomsOrderByNumber();
         freeRoomsOrderByNumber.forEach(System.out::println);
         System.out.println("__________________________________________________________");
 
-        Order order3 = orderService.addOrder(1L, 3L, LocalDate.of(2021, 06, 10), LocalDate.of(2021, 06, 14), null);
-        System.out.println("Свободные комнаты (отсортированные по номеру) после 3 заказа");
+        Order order7 = orderService.addOrder(1L, 3L, LocalDate.of(2021, 06, 10), LocalDate.of(2021, 06, 14), null);
+        System.out.println("Свободные комнаты (отсортированные по номеру) после 7 заказа");
         freeRoomsOrderByNumber = roomService.getFreeRoomsOrderByNumber();
         freeRoomsOrderByNumber.forEach(System.out::println);
         System.out.println("__________________________________________________________");
@@ -102,8 +115,13 @@ public class Hotel {
         System.out.println("__________________________________________________________");
 
         System.out.println("Услуги по цене");
-        List <Maintenance> maintenancesByPrice = maintenanceDao.getAll(null, "price");
+        List <Maintenance> maintenancesByPrice = maintenanceService.getMaintenanceByPrice();
         maintenancesByPrice.forEach(System.out::println);
+        System.out.println("__________________________________________________________");
+
+        System.out.println("Последних 3 заказа по ИД номера");
+        List <Order> lastThreeOrders = orderService.getLastThreeGuestsOrder(1L);
+        lastThreeOrders.forEach(System.out::println);
         System.out.println("__________________________________________________________");
 
     }
