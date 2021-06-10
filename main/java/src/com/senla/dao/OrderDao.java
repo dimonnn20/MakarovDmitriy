@@ -1,16 +1,20 @@
 package com.senla.dao;
 
 import com.senla.api.dao.IOrderDao;
-import com.senla.api.service.IOrderService;
+import com.senla.api.filter.OrderFilter;
+import com.senla.comparator.order.OrderLastDateComparator;
+import com.senla.comparator.order.OrderStartDateComparator;
+import com.senla.filter.predicate.order.OrderFilterPredicate;
 import com.senla.model.Order;
-import com.senla.model.Room;
 import com.senla.util.IdGenerator;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class OrderDao implements IOrderDao {
-    private List <Order> orders = new ArrayList<>();
+    private List<Order> orders = new ArrayList<>();
 
     @Override
     public void save(Order entity) {
@@ -20,7 +24,7 @@ public class OrderDao implements IOrderDao {
 
     @Override
     public Order getById(Long id) {
-        for (Order order: orders) {
+        for (Order order : orders) {
             if (id.equals(order.getId())) {
                 return order;
             }
@@ -30,20 +34,64 @@ public class OrderDao implements IOrderDao {
 
     @Override
     public List<Order> getAll() {
-        return orders;
+        return getAll(null, null);
     }
 
     @Override
     public void delete(Order entity) {
-        for (Order order: orders) {
-            if (order.equals(entity)) {
-                orders.remove(order);
-            }
-        }
+        orders.remove(getById(entity.getId()));
     }
 
     @Override
-    public Room update(Order entity) {
+    public Order update(Order entity) {
+        getById(entity.getId()).setDateOfCheckIn(entity.getDateOfCheckIn());
+        getById(entity.getId()).setDateOfCheckOut(entity.getDateOfCheckOut());
+        return getById(entity.getId());
+    }
+
+    @Override
+    public List<Order> getAll(OrderFilter filter) {
+        return getAll(filter, null);
+    }
+
+    @Override
+    public List<Order> getAll(String sortName) {
+        return getAll(null, sortName);
+    }
+
+    @Override
+    public List<Order> getAll(OrderFilter filter, String sortName) {
+        List<Order> results = new ArrayList<>();
+
+        Predicate<Order> filterPredicate = getPredicateByFilter(filter);
+        if (filterPredicate != null) {
+            for (Order entity : orders) {
+                if (filterPredicate.test(entity)) {
+                    results.add(entity);
+                }
+            }
+        } else {
+            results.addAll(orders);
+        }
+        Comparator<Order> comparator = getComparatorBySortName(sortName);
+        if (comparator != null) {
+            results.sort(comparator);
+        }
+        return results;
+
+    }
+
+    private Comparator<Order> getComparatorBySortName(String sortName) {
+        if ("startDate".equals(sortName)) {
+            return new OrderStartDateComparator();
+        }
+        if ("lastDate".equals(sortName)) {
+            return new OrderLastDateComparator();
+        }
         return null;
+    }
+
+    private Predicate<Order> getPredicateByFilter(OrderFilter filter) {
+        return new OrderFilterPredicate(filter);
     }
 }

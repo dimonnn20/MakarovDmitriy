@@ -1,14 +1,20 @@
 package com.senla.dao;
 
 import com.senla.api.dao.IMaintenanceDao;
+import com.senla.api.filter.MaintenanceFilter;
+import com.senla.comparator.maintenance.MaintenanceDateComparator;
+import com.senla.comparator.maintenance.MaintenancePriceComparator;
+import com.senla.filter.predicate.maintenance.MaintenanceFilterPredicate;
 import com.senla.model.Maintenance;
 import com.senla.util.IdGenerator;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class MaintenanceDao implements IMaintenanceDao {
-    private List <Maintenance> maintenances = new ArrayList<>();
+    private List<Maintenance> maintenances = new ArrayList<>();
 
     @Override
     public void save(Maintenance entity) {
@@ -18,10 +24,25 @@ public class MaintenanceDao implements IMaintenanceDao {
 
     @Override
     public Maintenance getById(Long id) {
-        for (Maintenance maintenance: maintenances) {
+        for (Maintenance maintenance : maintenances) {
             if (id.equals(maintenance.getId())) {
                 return maintenance;
             }
+        }
+        return null;
+    }
+
+    public List<Maintenance> getByIds(List<Long> maintenanceInOrderId) {
+        if (maintenanceInOrderId != null) {
+            List<Maintenance> maintenanceListById = new ArrayList<>();
+            for (Maintenance maintenance : maintenances) {
+                for (Long maintenanceInOrderIdOne : maintenanceInOrderId) {
+                    if (maintenanceInOrderIdOne.equals(maintenance.getId())) {
+                        maintenanceListById.add(maintenance);
+                    }
+                }
+            }
+            return maintenanceListById;
         }
         return null;
     }
@@ -33,15 +54,59 @@ public class MaintenanceDao implements IMaintenanceDao {
 
     @Override
     public void delete(Maintenance entity) {
-        for (Maintenance maintenance: maintenances) {
-            if (maintenance.equals(entity)) {
-                maintenances.remove(entity);
-            }
-        }
+        maintenances.remove(getById(entity.getId()));
     }
 
     @Override
     public Maintenance update(Maintenance entity) {
+        getById(entity.getId()).setName(entity.getName());
+        getById(entity.getId()).setPrice(entity.getPrice());
+        return getById(entity.getId());
+    }
+
+    @Override
+    public List<Maintenance> getAll(MaintenanceFilter filter) {
+        return getAll(filter, null);
+    }
+
+    @Override
+    public List<Maintenance> getAll(String sortName) {
+        return getAll(null, sortName);
+    }
+
+    @Override
+    public List<Maintenance> getAll(MaintenanceFilter filter, String sortName) {
+        List<Maintenance> results = new ArrayList<>();
+
+        Predicate<Maintenance> filterPredicate = getPredicateByFilter(filter);
+        if (filterPredicate != null) {
+            for (Maintenance entity : maintenances) {
+                if (filterPredicate.test(entity)) {
+                    results.add(entity);
+                }
+            }
+        } else {
+            results.addAll(maintenances);
+        }
+        Comparator<Maintenance> comparator = getComparatorBySortName(sortName);
+        if (comparator != null) {
+            results.sort(comparator);
+        }
+        return results;
+    }
+
+    private Comparator<Maintenance> getComparatorBySortName(String sortName) {
+        if ("price".equals(sortName)) {
+            return new MaintenancePriceComparator();
+        }
+        if ("date".equals(sortName)) {
+            return new MaintenanceDateComparator();
+        }
         return null;
     }
+
+    private Predicate<Maintenance> getPredicateByFilter(MaintenanceFilter filter) {
+        return new MaintenanceFilterPredicate(filter);
+    }
+
 }

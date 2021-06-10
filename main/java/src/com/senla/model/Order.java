@@ -1,69 +1,61 @@
 package com.senla.model;
-import com.senla.util.DaysOfStayCalculations;
 
-import java.time.LocalDateTime;
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Order extends AEntity {
-    private String dateOfCheckIn;
-    private String dateOfCheckOut;
-    private Long guestOrderId;
-    private Long roomOrderId;
-    private List<Maintenance> maintenanceOrder;
-    private Long dayOfStay;
+    private LocalDate dateOfCheckIn;
+    private LocalDate dateOfCheckOut;
+    private Guest guestInOrder;
+    private Room roomInOrder;
+    private List<Maintenance> maintenancesInOrder = new ArrayList<>();
 
-    public Order (Long guestOrderId, Long roomOrderId, String dateOfCheckIn, String dateOfCheckOut,
-                  List <Maintenance> maintenanceOrder) {
-        this.guestOrderId = guestOrderId;
-        this.roomOrderId = roomOrderId;
+    public Order(Guest guestInOrder, Room roomInOrder, LocalDate dateOfCheckIn, LocalDate dateOfCheckOut) {
+        this.guestInOrder = guestInOrder;
+        this.roomInOrder = roomInOrder;
         this.dateOfCheckIn = dateOfCheckIn;
         this.dateOfCheckOut = dateOfCheckOut;
-        this.maintenanceOrder = maintenanceOrder;
-        dayOfStay= DaysOfStayCalculations.getDayOfStay(dateOfCheckIn, dateOfCheckOut);
     }
 
-    public  String getDateOfCheckIn() {
+    public Order(Guest guestInOrder, Room roomInOrder, LocalDate dateOfCheckIn, LocalDate dateOfCheckOut, List<Maintenance> maintenancesInOrder) {
+        this.guestInOrder = guestInOrder;
+        this.roomInOrder = roomInOrder;
+        this.dateOfCheckIn = dateOfCheckIn;
+        this.dateOfCheckOut = dateOfCheckOut;
+        this.maintenancesInOrder = maintenancesInOrder;
+    }
+
+    public LocalDate getDateOfCheckIn() {
         return dateOfCheckIn;
     }
 
-    public  String getDateOfCheckOut() {
+    public LocalDate getDateOfCheckOut() {
         return dateOfCheckOut;
     }
 
-
-
-    public Long getGuestOrderId() {
-        return guestOrderId;
+    public Guest getGuestInOrder() {
+        return guestInOrder;
     }
 
-    public Long getRoomOrderId() {
-        return roomOrderId;
+    public Room getRoomInOrder() {
+        return roomInOrder;
     }
 
-    public List<Maintenance> getMaintenanceOrder() {
-        return maintenanceOrder;
-    }
-
-    public void setDateOfCheckIn(String dateOfCheckIn) {
+    public void setDateOfCheckIn(LocalDate dateOfCheckIn) {
         this.dateOfCheckIn = dateOfCheckIn;
     }
 
-    public void setDateOfCheckOut(String dateOfCheckOut) {
+    public void setDateOfCheckOut(LocalDate dateOfCheckOut) {
         this.dateOfCheckOut = dateOfCheckOut;
     }
 
-
-    public void setGuestOrderId(Long guestOrderId) {
-        this.guestOrderId = guestOrderId;
+    public void setMaintenancesInOrder(Maintenance maintenanceInOrder) {
+        maintenancesInOrder.add(maintenanceInOrder);
     }
 
-    public void setRoomOrderId(Long roomOrderId) {
-        this.roomOrderId = roomOrderId;
-    }
-
-    public void setMaintenanceOrder(List<Maintenance> maintenanceOrder) {
-        this.maintenanceOrder = maintenanceOrder;
+    public List<Maintenance> getMaintenancesInOrder() {
+        return maintenancesInOrder;
     }
 
     @Override
@@ -71,10 +63,9 @@ public class Order extends AEntity {
         return "Order{" +
                 "dateOfCheckIn='" + dateOfCheckIn + '\'' +
                 ", dateOfCheckOut='" + dateOfCheckOut + '\'' +
-                ", guestOrderId=" + guestOrderId +
-                ", roomOrderId=" + roomOrderId +
-                ", maintenanceOrder=" + maintenanceOrder +
-                ", dayOfStay=" + dayOfStay +
+                ", guestOrderId=" + guestInOrder +
+                ", roomOrderId=" + roomInOrder +
+                ", maintenanceOrder=" + maintenancesInOrder +
                 '}';
     }
 }

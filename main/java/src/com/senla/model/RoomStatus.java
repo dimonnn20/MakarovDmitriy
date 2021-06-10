@@ -1,5 +1,7 @@
 package com.senla.model;
 
 public enum RoomStatus {
-    OPEN,CLOSED,ON_REPAIR
+    AVAILABLE,
+    BUSY,
+    ON_REPAIR
 }

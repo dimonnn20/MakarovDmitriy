@@ -5,13 +5,14 @@ import com.senla.api.dao.IMaintenanceDao;
 import com.senla.api.dao.IOrderDao;
 import com.senla.api.dao.IRoomDao;
 import com.senla.api.service.IOrderService;
-import com.senla.model.Guest;
 import com.senla.model.Maintenance;
 import com.senla.model.Order;
-import com.senla.model.Room;
-import com.senla.util.DaysOfStayCalculations;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 public class OrderService implements IOrderService {
     private final IRoomDao roomDao;
@@ -19,34 +20,52 @@ public class OrderService implements IOrderService {
     private final IMaintenanceDao maintenanceDao;
     private final IOrderDao orderDao;
 
-
-    public  OrderService (IRoomDao roomDao, IGuestDao guestDao, IMaintenanceDao maintenanceDao, IOrderDao orderDao) {
+    public OrderService(IRoomDao roomDao, IGuestDao guestDao, IMaintenanceDao maintenanceDao, IOrderDao orderDao) {
         this.maintenanceDao = maintenanceDao;
         this.roomDao = roomDao;
         this.guestDao = guestDao;
         this.orderDao = orderDao;
     }
+
     @Override
-    public Order addOrder (Long guestOrderId, Long roomOrderId, String dateOfCheckIn, String dateOfCheckOut,
-                           List <Maintenance> maintenanceOrder) {
-        Order order = new Order(guestOrderId, roomOrderId, dateOfCheckIn, dateOfCheckOut, maintenanceOrder);
-        checkIn(guestOrderId,roomOrderId);
+    public Order addOrder(Long guestId, Long roomId, LocalDate dateOfCheckIn, LocalDate dateOfCheckOut) {
+        Order order = new Order(guestDao.getById(guestId), roomDao.getById(roomId), dateOfCheckIn, dateOfCheckOut);
         orderDao.save(order);
         return order;
     }
-    private void checkIn(Long guestOrderId, Long roomOrderId) {
-            Room room = roomDao.getById(roomOrderId);
-            Guest guest = guestDao.getById(guestOrderId);
-            if (room.getCapacity()>room.getGuests().size()) {
-                room.getGuests().add(guest);
-            }
-        }
 
     @Override
-    public void evictGuest(Long guestId) {
-        Guest guestForEvict = guestDao.getById(guestId);
-        for (Room room : roomDao.getAll()) {
-            room.getGuests().remove(guestForEvict);
-        }
+    public Maintenance addMaintenanceInOrder(Long maintenanceId, Long orderId, LocalDate date) {
+        Maintenance maintenance = maintenanceDao.getById(maintenanceId);
+        maintenance.setDate(date);
+        orderDao.getById(orderId).setMaintenancesInOrder(maintenance);
+        return maintenance;
     }
+
+    @Override
+    public double getRoomFullCost(Long orderId) {
+        double summ = 0D;
+        if (orderDao.getById(orderId).getMaintenancesInOrder() != null) {
+            List<Maintenance> maintenanceInRoom = orderDao.getById(orderId).getMaintenancesInOrder();
+            for (Maintenance maintenance : maintenanceInRoom) {
+                summ += maintenance.getPrice();
+            }
+        }
+        return (DAYS.between(orderDao.getById(orderId).getDateOfCheckIn(), orderDao.getById(orderId).getDateOfCheckOut())) * orderDao.getById(orderId).getRoomInOrder().getPrice() + summ;
+    }
+
+    @Override
+    public List<Order> getLastThreeGuestsOrder(Long id) {
+        int i = 0;
+        List<Order> lastThreeOrders = new ArrayList<>();
+        for (Order order : orderDao.getAll("lastDate")) {
+            if (order.getRoomInOrder().getId().equals(id) && i < 3) {
+                lastThreeOrders.add(order);
+                i++;
+            }
+        }
+        return lastThreeOrders;
+    }
+
+
 }

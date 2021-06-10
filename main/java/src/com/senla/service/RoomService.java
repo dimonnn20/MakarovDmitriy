@@ -23,10 +23,15 @@ public class RoomService implements IRoomService {
     }
 
     @Override
-    public Room addRoom(Integer number, Integer capacity, RoomStatus status, Double price) {
-        Room room = new Room(number, capacity, status, price);
+    public Room addRoom(Integer stars, Integer capacity, RoomStatus status, Double price) {
+        Room room = new Room(stars, capacity, status, price);
         roomDao.save(room);
         return room;
+    }
+
+    @Override
+    public Room getRoomById(Long id) {
+        return roomDao.getById(id);
     }
 
     @Override
@@ -35,75 +40,81 @@ public class RoomService implements IRoomService {
     }
 
     @Override
-    public List<Room> getFreeRoomsOrderByNumber() {
+    public List<Room> getAllRoomsByStars() {
+        return roomDao.getAll("stars");
+    }
+
+    @Override
+    public List<Room> getAllRoomsByCapacity() {
+        return roomDao.getAll("capacity");
+    }
+
+    @Override
+    public List<Room> getAllRoomsByPrice() {
+        return roomDao.getAll("price");
+    }
+
+    @Override
+    public List<Room> getFreeRoomsOrderByStars() {
         OrderFilter orderFilter = new OrderFilter();
         orderFilter.setTargetDate(LocalDate.now());
-        List <Order> currentOrders = orderDao.getAll(orderFilter);
-        List <Room> notFreeRooms = new ArrayList<>();
+        List<Order> currentOrders = orderDao.getAll(orderFilter);
+        List<Room> notFreeRooms = new ArrayList<>();
         for (Order order : currentOrders) {
             notFreeRooms.add(order.getRoomInOrder());
         }
         RoomFilter roomFilter = new RoomFilter();
         roomFilter.setExcludedRooms(notFreeRooms);
-        return roomDao.getAll(roomFilter,"number");
+        return roomDao.getAll(roomFilter, "stars");
     }
 
     @Override
     public List<Room> getFreeRoomsOrderByCapacity() {
         OrderFilter orderFilter = new OrderFilter();
         orderFilter.setTargetDate(LocalDate.now());
-        List <Order> currentOrders = orderDao.getAll(orderFilter);
-        List <Room> notFreeRooms = new ArrayList<>();
-        for (Order order: currentOrders) {
+        List<Order> currentOrders = orderDao.getAll(orderFilter);
+        List<Room> notFreeRooms = new ArrayList<>();
+        for (Order order : currentOrders) {
             notFreeRooms.add(order.getRoomInOrder());
         }
         RoomFilter roomFilter = new RoomFilter();
         roomFilter.setExcludedRooms(notFreeRooms);
-        return roomDao.getAll(roomFilter,"capacity");
+        return roomDao.getAll(roomFilter, "capacity");
     }
 
     @Override
     public List<Room> getFreeRoomsOrderByPrice() {
         OrderFilter orderFilter = new OrderFilter();
         orderFilter.setTargetDate(LocalDate.now());
-        List <Order> currentOrders = orderDao.getAll(orderFilter);
-        List <Room> notFreeRooms = new ArrayList<>();
-        for (Order order: currentOrders) {
+        List<Order> currentOrders = orderDao.getAll(orderFilter);
+        List<Room> notFreeRooms = new ArrayList<>();
+        for (Order order : currentOrders) {
             notFreeRooms.add(order.getRoomInOrder());
 
         }
         RoomFilter roomFilter = new RoomFilter();
         roomFilter.setExcludedRooms(notFreeRooms);
-        return roomDao.getAll(roomFilter,"price");
+        return roomDao.getAll(roomFilter, "price");
     }
 
     @Override
     public Integer getNumberFreeRoomsOrder() {
-        OrderFilter orderFilter = new OrderFilter();
-        orderFilter.setTargetDate(LocalDate.now());
-        List <Order> currentOrders = orderDao.getAll(orderFilter);
-        List <Room> notFreeRooms = new ArrayList<>();
-        for (Order order: currentOrders) {
-            notFreeRooms.add(order.getRoomInOrder());
-        }
-        RoomFilter roomFilter = new RoomFilter();
-        roomFilter.setExcludedRooms(notFreeRooms);
-        return roomDao.getAll(roomFilter,null).size();
+        return getFreeRoomsOrderByCapacity().size();
     }
 
     @Override
     public List<Room> getFreeRoomsOrderByDate(LocalDate date) {
         OrderFilter orderFilter = new OrderFilter();
         orderFilter.setTargetDate(date);
-        List <Order> currentOrders = orderDao.getAll(orderFilter);
-        List <Room> notFreeRooms = new ArrayList<>();
-        for (Order order: currentOrders) {
+        List<Order> currentOrders = orderDao.getAll(orderFilter);
+        List<Room> notFreeRooms = new ArrayList<>();
+        for (Order order : currentOrders) {
             notFreeRooms.add(order.getRoomInOrder());
         }
 
         RoomFilter roomFilter = new RoomFilter();
         roomFilter.setExcludedRooms(notFreeRooms);
-        return roomDao.getAll(roomFilter,null);
+        return roomDao.getAll(roomFilter);
     }
 
 }
