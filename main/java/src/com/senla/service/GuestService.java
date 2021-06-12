@@ -2,14 +2,12 @@ package com.senla.service;
 
 import com.senla.api.dao.IGuestDao;
 import com.senla.api.dao.IOrderDao;
-import com.senla.api.filter.GuestFilter;
 import com.senla.api.filter.OrderFilter;
 import com.senla.api.service.IGuestService;
 import com.senla.model.Guest;
 import com.senla.model.Order;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 public class GuestService implements IGuestService {
@@ -17,7 +15,6 @@ public class GuestService implements IGuestService {
     private final IOrderDao orderDao;
 
     public GuestService(IGuestDao guestDao, IOrderDao orderDao) {
-
         this.guestDao = guestDao;
         this.orderDao = orderDao;
     }
@@ -29,41 +26,19 @@ public class GuestService implements IGuestService {
         return guest;
     }
 
-    public List<Guest> getAllCurrentGuestsByDate() {
-        List<Guest> currentGuests = new ArrayList<>();
+    public List<Order> getAllCurrentGuestsBy(String sortName) {
         OrderFilter orderFilter = new OrderFilter();
         orderFilter.setTargetDate(LocalDate.now());
-        List<Order> currentOrders = orderDao.getAll(orderFilter);
-
-        for (Order order : currentOrders) {
-            if (!currentGuests.contains(order.getGuestInOrder())) {
-                Guest guest = order.getGuestInOrder();
-                guest.setDateOfCheckOut(order.getDateOfCheckOut());
-                guest.setRoomId(order.getRoomInOrder().getId());
-                currentGuests.add(guest);
-            }
-        }
-        GuestFilter guestFilter = new GuestFilter();
-        guestFilter.setCurrentGuests(currentGuests);
-        return guestDao.getAll(guestFilter, "date");
+        return orderDao.getAll(orderFilter, sortName);
     }
 
-    public List<Guest> getAllCurrentGuestsByAlphabet() {
-        List<Guest> currentGuests = new ArrayList<>();
-        OrderFilter orderFilter = new OrderFilter();
-        orderFilter.setTargetDate(LocalDate.now());
-        List<Order> currentOrders = orderDao.getAll(orderFilter);
+    @Override
+    public List<Order> getAllCurrentGuestsByDate() {
+        return getAllCurrentGuestsBy("lastDate");
+    }
 
-        for (Order order : currentOrders) {
-            if (!currentGuests.contains(order.getGuestInOrder())) {
-                Guest guest = order.getGuestInOrder();
-                guest.setDateOfCheckOut(order.getDateOfCheckOut());
-                guest.setRoomId(order.getRoomInOrder().getId());
-                currentGuests.add(guest);
-            }
-        }
-        GuestFilter guestFilter = new GuestFilter();
-        guestFilter.setCurrentGuests(currentGuests);
-        return guestDao.getAll(guestFilter, "alphabet");
+    @Override
+    public List<Order> getAllCurrentGuestsByAlphabet() {
+        return getAllCurrentGuestsBy("name");
     }
 }

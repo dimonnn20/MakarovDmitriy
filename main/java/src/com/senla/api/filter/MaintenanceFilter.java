@@ -9,7 +9,6 @@ public class MaintenanceFilter {
     private List<Maintenance> currentMaintenance;
 
     public List<Maintenance> getCurrentMaintenance() {
-
         return currentMaintenance;
     }
 

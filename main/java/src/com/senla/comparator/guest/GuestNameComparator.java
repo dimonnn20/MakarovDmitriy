@@ -4,7 +4,7 @@ import com.senla.model.Guest;
 
 import java.util.Comparator;
 
-public class GuestAlphabetComparator implements Comparator<Guest> {
+public class GuestNameComparator implements Comparator<Guest> {
 
     @Override
     public int compare(Guest o1, Guest o2) {

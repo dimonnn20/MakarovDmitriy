@@ -148,12 +148,12 @@ public class Hotel {
         System.out.println("__________________________________________________________");
 
         System.out.println("Посмотреть всех текущих постояльцев отсортированные по алфавиту ");
-        List<Guest> activeGuestsByAlphabet = guestService.getAllCurrentGuestsByAlphabet();
+        List<Order> activeGuestsByAlphabet = guestService.getAllCurrentGuestsByAlphabet();
         activeGuestsByAlphabet.forEach(System.out::println);
         System.out.println("__________________________________________________________");
 
         System.out.println("Посмотреть всех текущих постояльцев отсортированные по дате выселения");
-        List<Guest> activeGuestsByDate = guestService.getAllCurrentGuestsByDate();
+        List<Order> activeGuestsByDate = guestService.getAllCurrentGuestsByDate();
         activeGuestsByDate.forEach(System.out::println);
         System.out.println("__________________________________________________________");
 
@@ -161,7 +161,7 @@ public class Hotel {
         orderService.addMaintenanceInOrder(2L, 1L, LocalDate.of(2021, 06, 15));
 
         System.out.println("Посмотреть все услуги по ID гостя отсортированные по цене");
-        List<Maintenance> guestMaintenanceByPrice = maintenanceService.getAllCurrentMaintenancesByPrice(1L);
+        List<Maintenance> guestMaintenanceByPrice = maintenanceService.getAllCurrentMaintenancesOrderByPrice(1L);
         guestMaintenanceByPrice.forEach(System.out::println);
         System.out.println("__________________________________________________________");
 
@@ -179,6 +179,7 @@ public class Hotel {
         List<Room> rooms = roomService.getAllRoomsByPrice();
         rooms.forEach(System.out::println);
         System.out.println("__________________________________________________________");
+
 
     }
 }

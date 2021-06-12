@@ -4,9 +4,10 @@ import com.senla.model.Guest;
 
 import java.util.Comparator;
 
-public class GuestDateComparator implements Comparator<Guest> {
+public class GuestAgeComparator implements Comparator<Guest> {
+
     @Override
     public int compare(Guest o1, Guest o2) {
-        return o1.getDateOfCheckOut().compareTo(o2.getDateOfCheckOut());
+        return o1.getAge().compareTo(o2.getAge());
     }
 }

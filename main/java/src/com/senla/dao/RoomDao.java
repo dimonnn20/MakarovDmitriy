@@ -45,11 +45,12 @@ public class RoomDao implements IRoomDao {
 
     @Override
     public Room update(Room entity) {
-        getById(entity.getId()).setStars(entity.getStars());
-        getById(entity.getId()).setStatus(entity.getStatus());
-        getById(entity.getId()).setCapacity(entity.getCapacity());
-        getById(entity.getId()).setPrice(entity.getPrice());
-        return getById(entity.getId());
+        Room room = getById(entity.getId());
+        room.setStars(entity.getStars());
+        room.setStatus(entity.getStatus());
+        room.setCapacity(entity.getCapacity());
+        room.setPrice(entity.getPrice());
+        return room;
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.senla.dao;
 import com.senla.api.dao.IOrderDao;
 import com.senla.api.filter.OrderFilter;
 import com.senla.comparator.order.OrderLastDateComparator;
+import com.senla.comparator.order.OrderNameComparator;
 import com.senla.comparator.order.OrderStartDateComparator;
 import com.senla.filter.predicate.order.OrderFilterPredicate;
 import com.senla.model.Order;
@@ -44,9 +45,10 @@ public class OrderDao implements IOrderDao {
 
     @Override
     public Order update(Order entity) {
-        getById(entity.getId()).setDateOfCheckIn(entity.getDateOfCheckIn());
-        getById(entity.getId()).setDateOfCheckOut(entity.getDateOfCheckOut());
-        return getById(entity.getId());
+        Order order = getById(entity.getId());
+        order.setDateOfCheckIn(entity.getDateOfCheckIn());
+        order.setDateOfCheckOut(entity.getDateOfCheckOut());
+        return order;
     }
 
     @Override
@@ -87,6 +89,9 @@ public class OrderDao implements IOrderDao {
         }
         if ("lastDate".equals(sortName)) {
             return new OrderLastDateComparator();
+        }
+        if ("name".equals(sortName)) {
+            return new OrderNameComparator();
         }
         return null;
     }

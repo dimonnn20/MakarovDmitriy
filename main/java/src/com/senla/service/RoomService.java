@@ -54,52 +54,37 @@ public class RoomService implements IRoomService {
         return roomDao.getAll("price");
     }
 
-    @Override
-    public List<Room> getFreeRoomsOrderByStars() {
+    private List<Room> getFreeRoomsOrderBy(String sortName) {
         OrderFilter orderFilter = new OrderFilter();
         orderFilter.setTargetDate(LocalDate.now());
         List<Order> currentOrders = orderDao.getAll(orderFilter);
         List<Room> notFreeRooms = new ArrayList<>();
         for (Order order : currentOrders) {
-            notFreeRooms.add(order.getRoomInOrder());
+            notFreeRooms.add(order.getRoom());
         }
         RoomFilter roomFilter = new RoomFilter();
         roomFilter.setExcludedRooms(notFreeRooms);
-        return roomDao.getAll(roomFilter, "stars");
+        return roomDao.getAll(roomFilter, sortName);
+    }
+
+    @Override
+    public List<Room> getFreeRoomsOrderByStars() {
+        return getFreeRoomsOrderBy("stars");
     }
 
     @Override
     public List<Room> getFreeRoomsOrderByCapacity() {
-        OrderFilter orderFilter = new OrderFilter();
-        orderFilter.setTargetDate(LocalDate.now());
-        List<Order> currentOrders = orderDao.getAll(orderFilter);
-        List<Room> notFreeRooms = new ArrayList<>();
-        for (Order order : currentOrders) {
-            notFreeRooms.add(order.getRoomInOrder());
-        }
-        RoomFilter roomFilter = new RoomFilter();
-        roomFilter.setExcludedRooms(notFreeRooms);
-        return roomDao.getAll(roomFilter, "capacity");
+        return getFreeRoomsOrderBy("capacity");
     }
 
     @Override
     public List<Room> getFreeRoomsOrderByPrice() {
-        OrderFilter orderFilter = new OrderFilter();
-        orderFilter.setTargetDate(LocalDate.now());
-        List<Order> currentOrders = orderDao.getAll(orderFilter);
-        List<Room> notFreeRooms = new ArrayList<>();
-        for (Order order : currentOrders) {
-            notFreeRooms.add(order.getRoomInOrder());
-
-        }
-        RoomFilter roomFilter = new RoomFilter();
-        roomFilter.setExcludedRooms(notFreeRooms);
-        return roomDao.getAll(roomFilter, "price");
+        return getFreeRoomsOrderBy("price");
     }
 
     @Override
     public Integer getNumberFreeRoomsOrder() {
-        return getFreeRoomsOrderByCapacity().size();
+        return getFreeRoomsOrderBy(null).size();
     }
 
     @Override
@@ -109,7 +94,7 @@ public class RoomService implements IRoomService {
         List<Order> currentOrders = orderDao.getAll(orderFilter);
         List<Room> notFreeRooms = new ArrayList<>();
         for (Order order : currentOrders) {
-            notFreeRooms.add(order.getRoomInOrder());
+            notFreeRooms.add(order.getRoom());
         }
 
         RoomFilter roomFilter = new RoomFilter();

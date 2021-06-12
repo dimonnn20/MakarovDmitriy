@@ -14,4 +14,6 @@ public interface IOrderService {
     List<Order> getLastThreeGuestsOrder(Long id);
 
     Maintenance addMaintenanceInOrder(Long maintenanceId, Long orderId, LocalDate date);
+
+    List<Order> getOrdersByGuestId(Long id);
 }

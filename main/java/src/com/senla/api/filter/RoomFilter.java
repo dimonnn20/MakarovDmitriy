@@ -19,12 +19,10 @@ public class RoomFilter {
     }
 
     public Integer getMinCapacity() {
-
         return minCapacity;
     }
 
     public void setMinCapacity(Integer minCapacity) {
-
         this.minCapacity = minCapacity;
     }
 }

@@ -11,8 +11,6 @@ public interface IMaintenanceDao {
 
     Maintenance getById(Long id);
 
-    List<Maintenance> getByIds(List<Long> maintenanceInOrderId);
-
     List<Maintenance> getAll();
 
     void delete(Maintenance entity);

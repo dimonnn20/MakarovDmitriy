@@ -14,14 +14,6 @@ public class MaintenanceFilterPredicate implements Predicate<Maintenance> {
 
     @Override
     public boolean test(Maintenance maintenance) {
-        if (maintenanceFilter == null) {
-            return true;
-        }
-        if (maintenanceFilter.getCurrentMaintenance() != null) {
-            if (!maintenanceFilter.getCurrentMaintenance().contains(maintenance)) {
-                return false;
-            }
-        }
         return true;
     }
 }

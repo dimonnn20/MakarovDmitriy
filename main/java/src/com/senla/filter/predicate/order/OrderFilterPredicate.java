@@ -23,6 +23,11 @@ public class OrderFilterPredicate implements Predicate<Order> {
                 return false;
             }
         }
+        if (orderFilter.getTargetGuestId() != null) {
+            if (!orderFilter.getTargetGuestId().equals(order.getGuest().getId())) {
+                return false;
+            }
+        }
         return true;
     }
 }

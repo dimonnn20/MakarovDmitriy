@@ -6,16 +6,13 @@ import java.util.List;
 
 public class GuestFilter {
 
-    private List<Guest> ActiveGuests;
+    private List<Guest> activeGuests;
 
     public List<Guest> getCurrentGuests() {
-
-        return ActiveGuests;
+        return activeGuests;
     }
 
     public void setCurrentGuests(List<Guest> activeGuests) {
-
-        this.ActiveGuests = activeGuests;
+        this.activeGuests = activeGuests;
     }
-
 }

@@ -2,8 +2,10 @@ package com.senla.service;
 
 import com.senla.api.dao.IMaintenanceDao;
 import com.senla.api.dao.IOrderDao;
-import com.senla.api.filter.MaintenanceFilter;
+import com.senla.api.filter.OrderFilter;
 import com.senla.api.service.IMaintenanceService;
+import com.senla.comparator.maintenance.MaintenanceDateComparator;
+import com.senla.comparator.maintenance.MaintenancePriceComparator;
 import com.senla.model.Maintenance;
 import com.senla.model.Order;
 
@@ -33,34 +35,31 @@ public class MaintenanceService implements IMaintenanceService {
     }
 
 
-    public List<Maintenance> getAllCurrentMaintenancesByPrice(Long id) {
+    private List<Maintenance> getAllCurrentMaintenancesOrderBy(Long id) {
         List<Maintenance> currentMaintenance = new ArrayList<>();
-        List<Order> currentOrders = orderDao.getAll();
-        for (Order order : currentOrders) {
-            if (order.getGuestInOrder().getId().equals(id) && order.getMaintenancesInOrder() != null) {
-                for (Maintenance maintenance : order.getMaintenancesInOrder()) {
-                    currentMaintenance.add(maintenance);
-                }
-            }
+        OrderFilter orderFilter = new OrderFilter();
+        orderFilter.setTargetGuestId(id);
+        List<Order> currentGuestOrders = orderDao.getAll(orderFilter);
+        for (Order order : currentGuestOrders) {
+            currentMaintenance.addAll(order.getMaintenances());
         }
-        MaintenanceFilter maintenanceFilter = new MaintenanceFilter();
-        maintenanceFilter.setCurrentMaintenance(currentMaintenance);
-
-        return maintenanceDao.getAll(maintenanceFilter, "price");
+        return currentMaintenance;
     }
 
-    public List<Maintenance> getAllCurrentMaintenancesByDate(Long id) {
+    public List<Maintenance> getAllCurrentMaintenancesOrderByPrice(Long id) {
+        MaintenancePriceComparator maintenancePriceComparator = new MaintenancePriceComparator();
         List<Maintenance> currentMaintenance = new ArrayList<>();
-        List<Order> currentOrders = orderDao.getAll();
-        for (Order order : currentOrders) {
-            if (order.getGuestInOrder().getId().equals(id) && order.getMaintenancesInOrder() != null) {
-                for (Maintenance maintenance : order.getMaintenancesInOrder()) {
-                    currentMaintenance.add(maintenance);
-                }
-            }
-        }
-        MaintenanceFilter maintenanceFilter = new MaintenanceFilter();
-        maintenanceFilter.setCurrentMaintenance(currentMaintenance);
-        return maintenanceDao.getAll(maintenanceFilter, "date");
+        currentMaintenance.addAll(getAllCurrentMaintenancesOrderBy(id));
+        currentMaintenance.sort(maintenancePriceComparator);
+        return currentMaintenance;
+    }
+
+
+    public List<Maintenance> getAllCurrentMaintenancesByDate(Long id) {
+        MaintenanceDateComparator maintenanceDateComparator = new MaintenanceDateComparator();
+        List<Maintenance> currentMaintenance = new ArrayList<>();
+        currentMaintenance.addAll(getAllCurrentMaintenancesOrderBy(id));
+        currentMaintenance.sort(maintenanceDateComparator);
+        return currentMaintenance;
     }
 }

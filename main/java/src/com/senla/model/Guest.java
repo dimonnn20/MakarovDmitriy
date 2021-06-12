@@ -1,33 +1,13 @@
 package com.senla.model;
 
-import java.time.LocalDate;
-
 public class Guest extends AEntity {
 
     private String name;
     private Integer age;
-    private Long roomId;
-    private LocalDate dateOfCheckOut;
 
     public Guest(String name, Integer age) {
         this.name = name;
         this.age = age;
-    }
-
-    public Long getRoomId() {
-        return roomId;
-    }
-
-    public LocalDate getDateOfCheckOut() {
-        return dateOfCheckOut;
-    }
-
-    public void setRoomId(Long roomId) {
-        this.roomId = roomId;
-    }
-
-    public void setDateOfCheckOut(LocalDate dateOfCheckOut) {
-        this.dateOfCheckOut = dateOfCheckOut;
     }
 
     public String getName() {
@@ -51,8 +31,6 @@ public class Guest extends AEntity {
         return "Guest{" +
                 "name='" + name + '\'' +
                 ", age=" + age +
-                ", room=" + roomId +
-                ", date of check out =" + dateOfCheckOut +
                 '}';
     }
 }

@@ -4,9 +4,9 @@ import java.time.LocalDate;
 
 public class OrderFilter {
     private LocalDate targetDate;
+    private Long targetGuestId;
 
     public LocalDate getTargetDate() {
-
         return targetDate;
     }
 
@@ -14,4 +14,11 @@ public class OrderFilter {
         this.targetDate = targetDate;
     }
 
+    public Long getTargetGuestId() {
+        return targetGuestId;
+    }
+
+    public void setTargetGuestId(Long id) {
+        this.targetGuestId = id;
+    }
 }

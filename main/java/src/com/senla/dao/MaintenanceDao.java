@@ -32,21 +32,6 @@ public class MaintenanceDao implements IMaintenanceDao {
         return null;
     }
 
-    public List<Maintenance> getByIds(List<Long> maintenanceInOrderId) {
-        if (maintenanceInOrderId != null) {
-            List<Maintenance> maintenanceListById = new ArrayList<>();
-            for (Maintenance maintenance : maintenances) {
-                for (Long maintenanceInOrderIdOne : maintenanceInOrderId) {
-                    if (maintenanceInOrderIdOne.equals(maintenance.getId())) {
-                        maintenanceListById.add(maintenance);
-                    }
-                }
-            }
-            return maintenanceListById;
-        }
-        return null;
-    }
-
     @Override
     public List<Maintenance> getAll() {
         return maintenances;
@@ -59,9 +44,10 @@ public class MaintenanceDao implements IMaintenanceDao {
 
     @Override
     public Maintenance update(Maintenance entity) {
-        getById(entity.getId()).setName(entity.getName());
-        getById(entity.getId()).setPrice(entity.getPrice());
-        return getById(entity.getId());
+        Maintenance maintenance = getById(entity.getId());
+        maintenance.setName(entity.getName());
+        maintenance.setPrice(entity.getPrice());
+        return maintenance;
     }
 
     @Override
@@ -77,7 +63,6 @@ public class MaintenanceDao implements IMaintenanceDao {
     @Override
     public List<Maintenance> getAll(MaintenanceFilter filter, String sortName) {
         List<Maintenance> results = new ArrayList<>();
-
         Predicate<Maintenance> filterPredicate = getPredicateByFilter(filter);
         if (filterPredicate != null) {
             for (Maintenance entity : maintenances) {

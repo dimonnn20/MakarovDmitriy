@@ -7,23 +7,23 @@ import java.util.List;
 public class Order extends AEntity {
     private LocalDate dateOfCheckIn;
     private LocalDate dateOfCheckOut;
-    private Guest guestInOrder;
-    private Room roomInOrder;
-    private List<Maintenance> maintenancesInOrder = new ArrayList<>();
+    private Guest guest;
+    private Room room;
+    private List<Maintenance> maintenances = new ArrayList<>();
 
-    public Order(Guest guestInOrder, Room roomInOrder, LocalDate dateOfCheckIn, LocalDate dateOfCheckOut) {
-        this.guestInOrder = guestInOrder;
-        this.roomInOrder = roomInOrder;
+    public Order(Guest guest, Room room, LocalDate dateOfCheckIn, LocalDate dateOfCheckOut) {
+        this.guest = guest;
+        this.room = room;
         this.dateOfCheckIn = dateOfCheckIn;
         this.dateOfCheckOut = dateOfCheckOut;
     }
 
-    public Order(Guest guestInOrder, Room roomInOrder, LocalDate dateOfCheckIn, LocalDate dateOfCheckOut, List<Maintenance> maintenancesInOrder) {
-        this.guestInOrder = guestInOrder;
-        this.roomInOrder = roomInOrder;
+    public Order(Guest guest, Room room, LocalDate dateOfCheckIn, LocalDate dateOfCheckOut, List<Maintenance> maintenances) {
+        this.guest = guest;
+        this.room = room;
         this.dateOfCheckIn = dateOfCheckIn;
         this.dateOfCheckOut = dateOfCheckOut;
-        this.maintenancesInOrder = maintenancesInOrder;
+        this.maintenances = maintenances;
     }
 
     public LocalDate getDateOfCheckIn() {
@@ -34,12 +34,12 @@ public class Order extends AEntity {
         return dateOfCheckOut;
     }
 
-    public Guest getGuestInOrder() {
-        return guestInOrder;
+    public Guest getGuest() {
+        return guest;
     }
 
-    public Room getRoomInOrder() {
-        return roomInOrder;
+    public Room getRoom() {
+        return room;
     }
 
     public void setDateOfCheckIn(LocalDate dateOfCheckIn) {
@@ -50,12 +50,12 @@ public class Order extends AEntity {
         this.dateOfCheckOut = dateOfCheckOut;
     }
 
-    public void setMaintenancesInOrder(Maintenance maintenanceInOrder) {
-        maintenancesInOrder.add(maintenanceInOrder);
+    public void setMaintenances(Maintenance maintenanceInOrder) {
+        maintenances.add(maintenanceInOrder);
     }
 
-    public List<Maintenance> getMaintenancesInOrder() {
-        return maintenancesInOrder;
+    public List<Maintenance> getMaintenances() {
+        return maintenances;
     }
 
     @Override
@@ -63,9 +63,9 @@ public class Order extends AEntity {
         return "Order{" +
                 "dateOfCheckIn='" + dateOfCheckIn + '\'' +
                 ", dateOfCheckOut='" + dateOfCheckOut + '\'' +
-                ", guestOrderId=" + guestInOrder +
-                ", roomOrderId=" + roomInOrder +
-                ", maintenanceOrder=" + maintenancesInOrder +
+                ", guestOrderId=" + guest +
+                ", roomOrderId=" + room +
+                ", maintenanceOrder=" + maintenances +
                 '}';
     }
 }
