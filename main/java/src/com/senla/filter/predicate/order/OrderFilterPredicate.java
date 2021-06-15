@@ -28,6 +28,10 @@ public class OrderFilterPredicate implements Predicate<Order> {
                 return false;
             }
         }
-        return true;
+        if (orderFilter.getTargetRoomId() != null) {
+            if (!orderFilter.getTargetRoomId().equals(order.getRoom().getId())) {
+                return false;
+            }
     }
-}
+        return true;
+}}

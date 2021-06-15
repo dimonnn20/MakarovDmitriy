@@ -55,7 +55,7 @@ public class MaintenanceService implements IMaintenanceService {
     }
 
 
-    public List<Maintenance> getAllCurrentMaintenancesByDate(Long id) {
+    public List<Maintenance> getAllCurrentMaintenancesOrderByDate(Long id) {
         MaintenanceDateComparator maintenanceDateComparator = new MaintenanceDateComparator();
         List<Maintenance> currentMaintenance = new ArrayList<>();
         currentMaintenance.addAll(getAllCurrentMaintenancesOrderBy(id));

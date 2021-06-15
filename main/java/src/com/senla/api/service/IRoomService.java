@@ -21,15 +21,15 @@ public interface IRoomService {
 
     List<Room> getAllRoomsByPrice();
 
-    List<Room> getFreeRoomsOrderByStars();
+    List<Room> getFreeRoomsOnDateByStars();
 
-    List<Room> getFreeRoomsOrderByCapacity();
+    List<Room> getFreeRoomsOnDateByCapacity();
 
-    List<Room> getFreeRoomsOrderByPrice();
+    List<Room> getFreeRoomsOnDateByPrice();
 
-    Integer getNumberFreeRoomsOrder();
+    Integer getFreeRoomsOnDate();
 
-    List<Room> getFreeRoomsOrderByDate(LocalDate date);
+    List<Room> getFreeRoomsOnDate(LocalDate date);
 
 
 }

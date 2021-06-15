@@ -24,7 +24,7 @@ import java.util.List;
 public class Hotel {
     private static final IGuestDao guestDao = new GuestDao();
     private static final IOrderDao orderDao = new OrderDao();
-    private static final IGuestService guestService = new GuestService(guestDao, orderDao);
+    private static final IGuestService guestService = new GuestService(guestDao);
     private static final IMaintenanceDao maintenanceDao = new MaintenanceDao();
     private static final IMaintenanceService maintenanceService = new MaintenanceService(maintenanceDao, orderDao);
     private static final IRoomDao roomDao = new RoomDao();
@@ -58,12 +58,12 @@ public class Hotel {
         allRooms.forEach(System.out::println);
         System.out.println("__________________________________________________________");
         System.out.println("Свободные комнаты (отсортированные по номеру) перед заказами");
-        List<Room> freeRoomsOrderByNumber = roomService.getFreeRoomsOrderByStars();
+        List<Room> freeRoomsOrderByNumber = roomService.getFreeRoomsOnDateByStars();
         freeRoomsOrderByNumber.forEach(System.out::println);
         System.out.println("__________________________________________________________");
 
         System.out.println("Свободные комнаты (отсортированные по вместимости) перед заказами");
-        List<Room> freeRoomsByCapacity = roomService.getFreeRoomsOrderByCapacity();
+        List<Room> freeRoomsByCapacity = roomService.getFreeRoomsOnDateByCapacity();
         freeRoomsByCapacity.forEach(System.out::println);
         System.out.println("__________________________________________________________");
 
@@ -98,44 +98,44 @@ public class Hotel {
         System.out.println("__________________________________________________________");
 
         System.out.println("Свободные комнаты (отсортированные по количеству звезд) после 1 заказа");
-        freeRoomsOrderByNumber = roomService.getFreeRoomsOrderByStars();
+        freeRoomsOrderByNumber = roomService.getFreeRoomsOnDateByStars();
         freeRoomsOrderByNumber.forEach(System.out::println);
         System.out.println("__________________________________________________________");
 
         System.out.println("Свободные комнаты (отсортированные по цене) после 1 заказа");
-        List<Room> freeRoomsByPrice = roomService.getFreeRoomsOrderByPrice();
+        List<Room> freeRoomsByPrice = roomService.getFreeRoomsOnDateByPrice();
         freeRoomsByPrice.forEach(System.out::println);
         System.out.println("__________________________________________________________");
 
         Order order6 = orderService.addOrder(2L, 2L, LocalDate.of(2021, 06, 06), LocalDate.of(2021, 06, 14));
 
         System.out.println("Свободные комнаты (отсортированные по количеству звезд) после 6 заказа");
-        freeRoomsOrderByNumber = roomService.getFreeRoomsOrderByStars();
+        freeRoomsOrderByNumber = roomService.getFreeRoomsOnDateByStars();
         freeRoomsOrderByNumber.forEach(System.out::println);
         System.out.println("__________________________________________________________");
 
         Order order7 = orderService.addOrder(1L, 3L, LocalDate.of(2021, 06, 10), LocalDate.of(2021, 06, 14));
         System.out.println("Свободные комнаты (отсортированные по количеству звезд) после 7 заказа");
-        freeRoomsOrderByNumber = roomService.getFreeRoomsOrderByStars();
+        freeRoomsOrderByNumber = roomService.getFreeRoomsOnDateByStars();
         freeRoomsOrderByNumber.forEach(System.out::println);
         System.out.println("__________________________________________________________");
 
         System.out.println("Количество свободных номеров");
-        System.out.println(roomService.getNumberFreeRoomsOrder());
+        System.out.println(roomService.getFreeRoomsOnDate());
         System.out.println("__________________________________________________________");
 
         System.out.println("Свободные номера на дату в будущем");
-        List<Room> freeRoomsByDate = roomService.getFreeRoomsOrderByDate(LocalDate.of(2021, 07, 01));
+        List<Room> freeRoomsByDate = roomService.getFreeRoomsOnDate(LocalDate.of(2021, 07, 01));
         freeRoomsByDate.forEach(System.out::println);
         System.out.println("__________________________________________________________");
 
         System.out.println("Последних 3 заказа по ИД номера");
-        List<Order> lastThreeOrders = orderService.getLastThreeGuestsOrder(1L);
+        List<Order> lastThreeOrders = orderService.getLastThreeGuestsOrdersByRoomId(1L);
         lastThreeOrders.forEach(System.out::println);
         System.out.println("__________________________________________________________");
 
         System.out.println("Список номеров которые будут свободны на произвольную дату в будущем");
-        List<Room> freeRoomsInFuture = roomService.getFreeRoomsOrderByDate(LocalDate.of(2021, 06, 20));
+        List<Room> freeRoomsInFuture = roomService.getFreeRoomsOnDate(LocalDate.of(2021, 06, 20));
         freeRoomsInFuture.forEach(System.out::println);
         System.out.println("__________________________________________________________");
 
@@ -148,17 +148,17 @@ public class Hotel {
         System.out.println("__________________________________________________________");
 
         System.out.println("Посмотреть всех текущих постояльцев отсортированные по алфавиту ");
-        List<Order> activeGuestsByAlphabet = guestService.getAllCurrentGuestsByAlphabet();
+        List<Order> activeGuestsByAlphabet = orderService.getAllCurrentGuestsOrderByGuestName();
         activeGuestsByAlphabet.forEach(System.out::println);
         System.out.println("__________________________________________________________");
 
         System.out.println("Посмотреть всех текущих постояльцев отсортированные по дате выселения");
-        List<Order> activeGuestsByDate = guestService.getAllCurrentGuestsByDate();
+        List<Order> activeGuestsByDate = orderService.getAllCurrentGuestsOrderByDate();
         activeGuestsByDate.forEach(System.out::println);
         System.out.println("__________________________________________________________");
 
-        orderService.addMaintenanceInOrder(1L, 1L, LocalDate.of(2021, 06, 12));
-        orderService.addMaintenanceInOrder(2L, 1L, LocalDate.of(2021, 06, 15));
+        orderService.addMaintenanceToOrder(1L, 1L, LocalDate.of(2021, 06, 12));
+        orderService.addMaintenanceToOrder(2L, 1L, LocalDate.of(2021, 06, 15));
 
         System.out.println("Посмотреть все услуги по ID гостя отсортированные по цене");
         List<Maintenance> guestMaintenanceByPrice = maintenanceService.getAllCurrentMaintenancesOrderByPrice(1L);
@@ -166,7 +166,7 @@ public class Hotel {
         System.out.println("__________________________________________________________");
 
         System.out.println("Посмотреть все услуги по ID гостя отсортированные по дате");
-        List<Maintenance> guestMaintenanceByDate = maintenanceService.getAllCurrentMaintenancesByDate(1L);
+        List<Maintenance> guestMaintenanceByDate = maintenanceService.getAllCurrentMaintenancesOrderByDate(1L);
         guestMaintenanceByDate.forEach(System.out::println);
         System.out.println("__________________________________________________________");
 

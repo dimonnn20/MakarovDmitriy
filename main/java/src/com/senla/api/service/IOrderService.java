@@ -11,9 +11,16 @@ public interface IOrderService {
 
     double getRoomFullCost(Long orderId);
 
-    List<Order> getLastThreeGuestsOrder(Long id);
+    List<Order> getLastThreeGuestsOrdersByRoomId(Long id);
 
-    Maintenance addMaintenanceInOrder(Long maintenanceId, Long orderId, LocalDate date);
+    void addMaintenanceToOrder(Long maintenanceId, Long orderId, LocalDate date);
 
     List<Order> getOrdersByGuestId(Long id);
+
+    List<Order> getAllCurrentGuestsOrderBy(String sortName);
+
+    List<Order> getAllCurrentGuestsOrderByGuestName();
+
+    List<Order> getAllCurrentGuestsOrderByDate();
+
 }

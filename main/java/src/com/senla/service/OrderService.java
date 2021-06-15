@@ -10,7 +10,6 @@ import com.senla.model.Maintenance;
 import com.senla.model.Order;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -36,43 +35,58 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public Maintenance addMaintenanceInOrder(Long maintenanceId, Long orderId, LocalDate date) {
+    public void addMaintenanceToOrder(Long maintenanceId, Long orderId, LocalDate date) {
+        Order order = orderDao.getById(orderId);
         Maintenance maintenance = maintenanceDao.getById(maintenanceId);
         maintenance.setDate(date);
-        orderDao.getById(orderId).setMaintenances(maintenance);
-        return maintenance;
+        order.getMaintenances().add(maintenance);
+        orderDao.update(order);
     }
 
     @Override
     public double getRoomFullCost(Long orderId) {
         double summ = 0D;
-        if (orderDao.getById(orderId).getMaintenances() != null) {
-            List<Maintenance> maintenanceInRoom = orderDao.getById(orderId).getMaintenances();
-            for (Maintenance maintenance : maintenanceInRoom) {
+        Order order = orderDao.getById(orderId);
+        if (order != null) {
+            List<Maintenance> maintenanceInOrder = order.getMaintenances();
+            for (Maintenance maintenance : maintenanceInOrder) {
                 summ += maintenance.getPrice();
             }
+            return (DAYS.between(orderDao.getById(orderId).getDateOfCheckIn(), orderDao.getById(orderId).getDateOfCheckOut())) * orderDao.getById(orderId).getRoom().getPrice() + summ;
         }
-        return (DAYS.between(orderDao.getById(orderId).getDateOfCheckIn(), orderDao.getById(orderId).getDateOfCheckOut())) * orderDao.getById(orderId).getRoom().getPrice() + summ;
+      return 0D;
     }
 
     @Override
-    public List<Order> getLastThreeGuestsOrder(Long id) {
+    public List<Order> getLastThreeGuestsOrdersByRoomId(Long id) {
+        OrderFilter orderFilter = new OrderFilter();
+        orderFilter.setTargetRoomId(id);
         int i = 0;
-        List<Order> lastThreeOrders = new ArrayList<>();
-        for (Order order : orderDao.getAll("lastDate")) {
-            if (order.getRoom().getId().equals(id) && i < 3) {
-                lastThreeOrders.add(order);
-                i++;
-            }
-        }
-        return lastThreeOrders;
+        List<Order> orders = orderDao.getAll(orderFilter,"lastDate");
+        return orders.subList(0, 2);
     }
 
     public List<Order> getOrdersByGuestId(Long id) {
         OrderFilter orderFilter = new OrderFilter();
         orderFilter.setTargetGuestId(id);
-        List<Order> currentGuestOrders = orderDao.getAll(orderFilter);
-        return currentGuestOrders;
+        return orderDao.getAll(orderFilter);
+    }
+
+    @Override
+    public List<Order> getAllCurrentGuestsOrderByDate() {
+        return getAllCurrentGuestsOrderBy("lastDate");
+    }
+
+    @Override
+    public List<Order> getAllCurrentGuestsOrderByGuestName() {
+        return getAllCurrentGuestsOrderBy("name");
+    }
+
+    @Override
+    private List<Order> getAllCurrentGuestsOrderBy(String sortName) {
+        OrderFilter orderFilter = new OrderFilter();
+        orderFilter.setTargetDate(LocalDate.now());
+        return orderDao.getAll(orderFilter, sortName);
     }
 
 

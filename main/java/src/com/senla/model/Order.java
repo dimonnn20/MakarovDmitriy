@@ -50,11 +50,14 @@ public class Order extends AEntity {
         this.dateOfCheckOut = dateOfCheckOut;
     }
 
-    public void setMaintenances(Maintenance maintenanceInOrder) {
+    public void addMaintenance(Maintenance maintenanceInOrder) {
         maintenances.add(maintenanceInOrder);
     }
 
     public List<Maintenance> getMaintenances() {
+        if (maintenances ==null) {
+            maintenances = new ArrayList<>();
+        }
         return maintenances;
     }
 

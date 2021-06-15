@@ -12,5 +12,5 @@ public interface IMaintenanceService {
 
     List<Maintenance> getAllCurrentMaintenancesOrderByPrice(Long id);
 
-    List<Maintenance> getAllCurrentMaintenancesByDate(Long id);
+    List<Maintenance> getAllCurrentMaintenancesOrderByDate(Long id);
 }

@@ -9,8 +9,4 @@ public interface IGuestService {
 
     Guest addGuest(String name, Integer age);
 
-    List<Order> getAllCurrentGuestsByAlphabet();
-
-    List<Order> getAllCurrentGuestsByDate();
-
 }
