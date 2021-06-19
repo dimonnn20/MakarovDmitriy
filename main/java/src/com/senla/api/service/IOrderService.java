@@ -9,7 +9,7 @@ import java.util.List;
 public interface IOrderService {
     Order addOrder(Long guestId, Long roomId, LocalDate dateOfCheckIn, LocalDate dateOfCheckOut);
 
-    double getRoomFullCost(Long orderId);
+    double getOrderFullCost(Long orderId);
 
     List<Order> getLastThreeGuestsOrdersByRoomId(Long id);
 

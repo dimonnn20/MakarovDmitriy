@@ -58,12 +58,12 @@ public class Hotel {
         allRooms.forEach(System.out::println);
         System.out.println("__________________________________________________________");
         System.out.println("Свободные комнаты (отсортированные по номеру) перед заказами");
-        List<Room> freeRoomsOrderByNumber = roomService.getFreeRoomsOnDateByStars();
+        List<Room> freeRoomsOrderByNumber = roomService.getFreeRoomsOrderByStars();
         freeRoomsOrderByNumber.forEach(System.out::println);
         System.out.println("__________________________________________________________");
 
         System.out.println("Свободные комнаты (отсортированные по вместимости) перед заказами");
-        List<Room> freeRoomsByCapacity = roomService.getFreeRoomsOnDateByCapacity();
+        List<Room> freeRoomsByCapacity = roomService.getFreeRoomsOrderByCapacity();
         freeRoomsByCapacity.forEach(System.out::println);
         System.out.println("__________________________________________________________");
 
@@ -83,45 +83,45 @@ public class Hotel {
                 LocalDate.of(2021, 06, 25));
 
         System.out.println("Все комнаты (отсортированные по количеству звезд) после 1 заказа");
-        List<Room> allRoomsOrderByNumber = roomService.getAllRoomsByStars();
+        List<Room> allRoomsOrderByNumber = roomService.getAllRoomsOrderByStars();
         allRoomsOrderByNumber.forEach(System.out::println);
         System.out.println("__________________________________________________________");
 
         System.out.println("Все комнаты (отсортированные по цене) после 1 заказа");
-        List<Room> allRoomsOrderByPrice = roomService.getAllRoomsByPrice();
+        List<Room> allRoomsOrderByPrice = roomService.getAllRoomsOrderByPrice();
         allRoomsOrderByPrice.forEach(System.out::println);
         System.out.println("__________________________________________________________");
 
         System.out.println("Все комнаты (отсортированные по вместимости) после 1 заказа");
-        List<Room> allRoomsOrderByCapacity = roomService.getAllRoomsByCapacity();
+        List<Room> allRoomsOrderByCapacity = roomService.getAllRoomsOrderByCapacity();
         allRoomsOrderByCapacity.forEach(System.out::println);
         System.out.println("__________________________________________________________");
 
         System.out.println("Свободные комнаты (отсортированные по количеству звезд) после 1 заказа");
-        freeRoomsOrderByNumber = roomService.getFreeRoomsOnDateByStars();
+        freeRoomsOrderByNumber = roomService.getFreeRoomsOrderByStars();
         freeRoomsOrderByNumber.forEach(System.out::println);
         System.out.println("__________________________________________________________");
 
         System.out.println("Свободные комнаты (отсортированные по цене) после 1 заказа");
-        List<Room> freeRoomsByPrice = roomService.getFreeRoomsOnDateByPrice();
+        List<Room> freeRoomsByPrice = roomService.getFreeRoomsOrderByPrice();
         freeRoomsByPrice.forEach(System.out::println);
         System.out.println("__________________________________________________________");
 
         Order order6 = orderService.addOrder(2L, 2L, LocalDate.of(2021, 06, 06), LocalDate.of(2021, 06, 14));
 
         System.out.println("Свободные комнаты (отсортированные по количеству звезд) после 6 заказа");
-        freeRoomsOrderByNumber = roomService.getFreeRoomsOnDateByStars();
+        freeRoomsOrderByNumber = roomService.getFreeRoomsOrderByStars();
         freeRoomsOrderByNumber.forEach(System.out::println);
         System.out.println("__________________________________________________________");
 
         Order order7 = orderService.addOrder(1L, 3L, LocalDate.of(2021, 06, 10), LocalDate.of(2021, 06, 14));
         System.out.println("Свободные комнаты (отсортированные по количеству звезд) после 7 заказа");
-        freeRoomsOrderByNumber = roomService.getFreeRoomsOnDateByStars();
+        freeRoomsOrderByNumber = roomService.getFreeRoomsOrderByStars();
         freeRoomsOrderByNumber.forEach(System.out::println);
         System.out.println("__________________________________________________________");
 
         System.out.println("Количество свободных номеров");
-        System.out.println(roomService.getFreeRoomsOnDate());
+        System.out.println(roomService.getFreeRooms());
         System.out.println("__________________________________________________________");
 
         System.out.println("Свободные номера на дату в будущем");
@@ -140,7 +140,7 @@ public class Hotel {
         System.out.println("__________________________________________________________");
 
         System.out.println("Сумму оплаты которую должен оплатить постоялец (по ID заказа)");
-        System.out.println(orderService.getRoomFullCost(2L));
+        System.out.println(orderService.getOrderFullCost(2L));
         System.out.println("__________________________________________________________");
 
         System.out.println("Посмотреть детали отдельного номера (по ID номера)");
@@ -176,7 +176,7 @@ public class Hotel {
         System.out.println("__________________________________________________________");
 
         System.out.println("Посмотреть все номера отсортированные по цене");
-        List<Room> rooms = roomService.getAllRoomsByPrice();
+        List<Room> rooms = roomService.getAllRoomsOrderByPrice();
         rooms.forEach(System.out::println);
         System.out.println("__________________________________________________________");
 

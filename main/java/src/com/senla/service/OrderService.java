@@ -44,7 +44,7 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public double getRoomFullCost(Long orderId) {
+    public double getOrderFullCost(Long orderId) {
         double summ = 0D;
         Order order = orderDao.getById(orderId);
         if (order != null) {
@@ -52,7 +52,7 @@ public class OrderService implements IOrderService {
             for (Maintenance maintenance : maintenanceInOrder) {
                 summ += maintenance.getPrice();
             }
-            return (DAYS.between(orderDao.getById(orderId).getDateOfCheckIn(), orderDao.getById(orderId).getDateOfCheckOut())) * orderDao.getById(orderId).getRoom().getPrice() + summ;
+            return (DAYS.between(order.getDateOfCheckIn(), order.getDateOfCheckOut())) * order.getRoom().getPrice() + summ;
         }
       return 0D;
     }
@@ -61,9 +61,17 @@ public class OrderService implements IOrderService {
     public List<Order> getLastThreeGuestsOrdersByRoomId(Long id) {
         OrderFilter orderFilter = new OrderFilter();
         orderFilter.setTargetRoomId(id);
-        int i = 0;
         List<Order> orders = orderDao.getAll(orderFilter,"lastDate");
-        return orders.subList(0, 2);
+        int i = orders.size();
+        if (orders != null) {
+            if (i > 3) {
+        return orders.subList(0, 3);
+            } else {
+                return orders.subList(0, i);
+            }
+
+        }
+        return orders;
     }
 
     public List<Order> getOrdersByGuestId(Long id) {
@@ -83,7 +91,7 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    private List<Order> getAllCurrentGuestsOrderBy(String sortName) {
+    public List<Order> getAllCurrentGuestsOrderBy(String sortName) {
         OrderFilter orderFilter = new OrderFilter();
         orderFilter.setTargetDate(LocalDate.now());
         return orderDao.getAll(orderFilter, sortName);

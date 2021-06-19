@@ -15,19 +15,19 @@ public interface IRoomService {
 
     Room getRoomById(Long id);
 
-    List<Room> getAllRoomsByStars();
+    List<Room> getAllRoomsOrderByStars();
 
-    List<Room> getAllRoomsByCapacity();
+    List<Room> getAllRoomsOrderByCapacity();
 
-    List<Room> getAllRoomsByPrice();
+    List<Room> getAllRoomsOrderByPrice();
 
-    List<Room> getFreeRoomsOnDateByStars();
+    List<Room> getFreeRoomsOrderByStars();
 
-    List<Room> getFreeRoomsOnDateByCapacity();
+    List<Room> getFreeRoomsOrderByCapacity();
 
-    List<Room> getFreeRoomsOnDateByPrice();
+    List<Room> getFreeRoomsOrderByPrice();
 
-    Integer getFreeRoomsOnDate();
+    Integer getFreeRooms();
 
     List<Room> getFreeRoomsOnDate(LocalDate date);
 

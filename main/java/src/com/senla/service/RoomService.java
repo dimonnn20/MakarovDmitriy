@@ -40,17 +40,17 @@ public class RoomService implements IRoomService {
     }
 
     @Override
-    public List<Room> getAllRoomsByStars() {
+    public List<Room> getAllRoomsOrderByStars() {
         return roomDao.getAll("stars");
     }
 
     @Override
-    public List<Room> getAllRoomsByCapacity() {
+    public List<Room> getAllRoomsOrderByCapacity() {
         return roomDao.getAll("capacity");
     }
 
     @Override
-    public List<Room> getAllRoomsByPrice() {
+    public List<Room> getAllRoomsOrderByPrice() {
         return roomDao.getAll("price");
     }
 
@@ -68,22 +68,22 @@ public class RoomService implements IRoomService {
     }
 
     @Override
-    public List<Room> getFreeRoomsOnDateByStars() {
+    public List<Room> getFreeRoomsOrderByStars() {
         return getFreeRoomsOrderBy("stars");
     }
 
     @Override
-    public List<Room> getFreeRoomsOnDateByCapacity() {
+    public List<Room> getFreeRoomsOrderByCapacity() {
         return getFreeRoomsOrderBy("capacity");
     }
 
     @Override
-    public List<Room> getFreeRoomsOnDateByPrice() {
+    public List<Room> getFreeRoomsOrderByPrice() {
         return getFreeRoomsOrderBy("price");
     }
 
     @Override
-    public Integer getFreeRoomsOnDate() {
+    public Integer getFreeRooms() {
         return getFreeRoomsOrderBy(null).size();
     }
 
