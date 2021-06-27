@@ -27,7 +27,7 @@ public interface IRoomService {
 
     List<Room> getFreeRoomsOrderByPrice();
 
-    Integer getFreeRooms();
+    Integer getFreeRoomsCount();
 
     List<Room> getFreeRoomsOnDate(LocalDate date);
 

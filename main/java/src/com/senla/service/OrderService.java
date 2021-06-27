@@ -10,8 +10,10 @@ import com.senla.model.Maintenance;
 import com.senla.model.Order;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Integer.min;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 public class OrderService implements IOrderService {
@@ -54,26 +56,22 @@ public class OrderService implements IOrderService {
             }
             return (DAYS.between(order.getDateOfCheckIn(), order.getDateOfCheckOut())) * order.getRoom().getPrice() + summ;
         }
-      return 0D;
+        return 0D;
     }
 
     @Override
-    public List<Order> getLastThreeGuestsOrdersByRoomId(Long id) {
+    public List<Order> getLastThreeGuestsOrdersByRoomId(Long roomId) {
         OrderFilter orderFilter = new OrderFilter();
-        orderFilter.setTargetRoomId(id);
-        List<Order> orders = orderDao.getAll(orderFilter,"lastDate");
-        int i = orders.size();
-        if (orders != null) {
-            if (i > 3) {
-        return orders.subList(0, 3);
-            } else {
-                return orders.subList(0, i);
-            }
-
+        orderFilter.setTargetRoomId(roomId);
+        List<Order> orders = orderDao.getAll(orderFilter, "lastDate");
+        if (orders.isEmpty()) {
+            return new ArrayList<>();
         }
-        return orders;
+        int i = min(orders.size(), 3);
+        return orders.subList(0, i);
     }
 
+    @Override
     public List<Order> getOrdersByGuestId(Long id) {
         OrderFilter orderFilter = new OrderFilter();
         orderFilter.setTargetGuestId(id);

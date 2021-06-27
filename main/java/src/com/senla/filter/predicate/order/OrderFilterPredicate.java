@@ -32,6 +32,7 @@ public class OrderFilterPredicate implements Predicate<Order> {
             if (!orderFilter.getTargetRoomId().equals(order.getRoom().getId())) {
                 return false;
             }
-    }
+        }
         return true;
-}}
+    }
+}

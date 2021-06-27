@@ -5,7 +5,7 @@ import java.time.LocalDate;
 public class OrderFilter {
     private LocalDate targetDate;
     private Long targetGuestId;
-    private long targetRoomId;
+    private Long targetRoomId;
 
     public LocalDate getTargetDate() {
         return targetDate;
@@ -23,11 +23,11 @@ public class OrderFilter {
         this.targetGuestId = id;
     }
 
-    public Long getTargetRoomId () {
+    public Long getTargetRoomId() {
         return targetRoomId;
     }
 
-    public void setTargetRoomId (Long id) {
-        this.targetRoomId=targetRoomId;
+    public void setTargetRoomId(Long id) {
+        this.targetRoomId = targetRoomId;
     }
 }

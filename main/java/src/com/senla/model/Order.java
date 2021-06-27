@@ -55,7 +55,7 @@ public class Order extends AEntity {
     }
 
     public List<Maintenance> getMaintenances() {
-        if (maintenances ==null) {
+        if (maintenances == null) {
             maintenances = new ArrayList<>();
         }
         return maintenances;

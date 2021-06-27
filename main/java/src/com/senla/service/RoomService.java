@@ -83,7 +83,7 @@ public class RoomService implements IRoomService {
     }
 
     @Override
-    public Integer getFreeRooms() {
+    public Integer getFreeRoomsCount() {
         return getFreeRoomsOrderBy(null).size();
     }
 

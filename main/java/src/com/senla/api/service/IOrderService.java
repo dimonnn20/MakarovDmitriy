@@ -1,6 +1,5 @@
 package com.senla.api.service;
 
-import com.senla.model.Maintenance;
 import com.senla.model.Order;
 
 import java.time.LocalDate;

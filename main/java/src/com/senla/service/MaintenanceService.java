@@ -9,6 +9,7 @@ import com.senla.comparator.maintenance.MaintenancePriceComparator;
 import com.senla.model.Maintenance;
 import com.senla.model.Order;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,10 +36,11 @@ public class MaintenanceService implements IMaintenanceService {
     }
 
 
-    private List<Maintenance> getAllCurrentMaintenancesOrderBy(Long id) {
+    private List<Maintenance> getCurrentMaintenancesByGuest(Long id) {
         List<Maintenance> currentMaintenance = new ArrayList<>();
         OrderFilter orderFilter = new OrderFilter();
         orderFilter.setTargetGuestId(id);
+        orderFilter.setTargetDate(LocalDate.now());
         List<Order> currentGuestOrders = orderDao.getAll(orderFilter);
         for (Order order : currentGuestOrders) {
             currentMaintenance.addAll(order.getMaintenances());
@@ -46,19 +48,20 @@ public class MaintenanceService implements IMaintenanceService {
         return currentMaintenance;
     }
 
-    public List<Maintenance> getAllCurrentMaintenancesOrderByPrice(Long id) {
+    @Override
+    public List<Maintenance> getCurrentMaintenancesByGuestOrderByPrice(Long id) {
         MaintenancePriceComparator maintenancePriceComparator = new MaintenancePriceComparator();
         List<Maintenance> currentMaintenance = new ArrayList<>();
-        currentMaintenance.addAll(getAllCurrentMaintenancesOrderBy(id));
+        currentMaintenance.addAll(getCurrentMaintenancesByGuest(id));
         currentMaintenance.sort(maintenancePriceComparator);
         return currentMaintenance;
     }
 
-
-    public List<Maintenance> getAllCurrentMaintenancesOrderByDate(Long id) {
+    @Override
+    public List<Maintenance> getCurrentMaintenancesByGuestOrderByDate(Long id) {
         MaintenanceDateComparator maintenanceDateComparator = new MaintenanceDateComparator();
         List<Maintenance> currentMaintenance = new ArrayList<>();
-        currentMaintenance.addAll(getAllCurrentMaintenancesOrderBy(id));
+        currentMaintenance.addAll(getCurrentMaintenancesByGuest(id));
         currentMaintenance.sort(maintenanceDateComparator);
         return currentMaintenance;
     }
